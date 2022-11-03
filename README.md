@@ -1,6 +1,6 @@
 # Scramble Organizer ![GitHub](https://img.shields.io/github/license/simonkellly/scramble-organizer)
 
-![GitHub last commit](https://img.shields.io/github/last-commit/simonkellly/scramble-organizerr)
+![GitHub last commit](https://img.shields.io/github/last-commit/simonkellly/scramble-organizer)
 ![GitHub deployments](https://img.shields.io/github/deployments/simonkellly/scramble-organizer/github-pages)
 ![GitHub top language](https://img.shields.io/github/languages/top/simonkellly/scramble-organizer)
 
