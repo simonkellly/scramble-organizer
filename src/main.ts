@@ -100,15 +100,26 @@ function parsePassword(password: string): Password | undefined {
 }
 
 async function getWCIF(competitionId: string): Promise<Competition | undefined> {
-  const apiUrl = `https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`;
-  const response = await fetch(apiUrl);
+  const apiUrl = `https://api.codetabs.com/v1/proxy?quest=https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`;
+  const response = await fetch(apiUrl, {
+  });
   
   if (!response.ok) {
+    console.log(response);
     return undefined;
   }
 
-  const wcif = await response.json();
-  return wcif as Competition;
+  const wcif = await response.json() as Competition | undefined;
+  if (!checkWCIF(wcif)) return undefined;
+  return wcif;
+}
+
+function checkWCIF(wcif: Competition | undefined) : boolean {
+  if (!wcif) return false;
+
+  if (!wcif.schedule || !wcif.events) return false;
+
+  return true;
 }
 
 async function sortPasswords() {
