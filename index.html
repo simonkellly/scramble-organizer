@@ -2,14 +2,69 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/scramble-organizer/vite.svg" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="favicon/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-    <script type="module" crossorigin src="/scramble-organizer/assets/index.acb3e620.js"></script>
-    <link rel="stylesheet" href="/scramble-organizer/assets/index.d5a34e39.css">
+    <title>Scramble Organizer</title>
+    <script type="module" crossorigin src="/scramble-organizer/assets/index.38ee47b6.js"></script>
+    <link rel="stylesheet" href="/scramble-organizer/assets/index.7d342f69.css">
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <p class="text-4xl font-extrabold">Scramble Organizer</p>
+      <p class="text-2xl font-semibold">A simple tool to sort wca scamble passwords.</p>
+      <br/>
+      <p class="text-sm">
+        This utility lets you organize your wca scramble passwords according to the competition schedule. This tool does not transmit the passwords over the internet, all processing is done locally.
+      </p>
+      <br/>
+      <div class="form-control py-1">
+        <label class="label">
+          <span class="label-text bold">Competition Id</span>
+        </label> 
+        <input
+        type="text"
+        class="input input-bordered input-primary w-full max-w-xs"
+        id="comp-id"
+        placeholder="ExampleComp2030"
+      />
+      </div>
+      <div class="form-control py-1">
+        <label class="label">
+          <span class="label-text">Passwords</span>
+        </label> 
+        <textarea
+          class="textarea textarea-primary"
+          id="passwords"
+          rows="10"
+          cols="60"
+          placeholder="Paste the scramble passwords here without the text at the top of the file"
+        ></textarea>
+      </div>
+      <button 
+        type="button" 
+        id="sort"
+        class="btn btn-primary"
+      >
+        Sort The Scrambles!
+      </button>
+    </div>
     
   </body>
 </html>
