@@ -24,7 +24,7 @@ To be able to work on this project, the following tools are required:
 $ git clone https://github.com/simonkellly/scramble-organizer.git
 
 # change directory
-$ cd bld-tools
+$ cd scramble-organizer
 
 # install nodejs dependenies
 $ yarn
