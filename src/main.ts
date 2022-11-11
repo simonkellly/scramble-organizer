@@ -100,7 +100,7 @@ function parsePassword(password: string): Password | undefined {
 }
 
 async function getWCIF(competitionId: string): Promise<Competition | undefined> {
-  const apiUrl = `https://api.codetabs.com/v1/proxy?quest=https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`;
+  const apiUrl = `https://cors-proxy.simonkellly.workers.dev?https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`;
   const response = await fetch(apiUrl, {
   });
   
