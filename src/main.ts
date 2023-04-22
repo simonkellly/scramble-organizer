@@ -1,9 +1,12 @@
 import { Competition } from "@wca/helpers";
 import "./index.css";
 
+const starCountElem = document.querySelector<HTMLSpanElement>("#star-count")!;
+const formElem = document.querySelector<HTMLFormElement>("#form")!;
 const compIdElem = document.querySelector<HTMLInputElement>("#comp-id")!;
 const passwordsElem = document.querySelector<HTMLInputElement>("#passwords")!;
 const sortButtonElem = document.querySelector<HTMLButtonElement>("#sort")!;
+const copyButtonElem = document.querySelector<HTMLButtonElement>("#copy")!;
 
 interface Dictionary<T> {
   [Key: string]: T;
@@ -128,7 +131,7 @@ async function sortPasswords() {
 
   if (!wcif) {
     alert("Error fetching competition details");
-    return;
+    return false;
   }
 
   const passwords = passwordsElem.value;
@@ -166,10 +169,42 @@ async function sortPasswords() {
     .map((password) => password.password);
 
   passwordsElem.value = sortedPasswords.join("\r\n");
+  return true;
 }
 
+function checkPasswordsValidity() {
+  // Make sure the text SECRET SCRAMBLE SET PASSCODES does not appear in the passwords
+  const isValid = !passwordsElem.value.includes("SECRET SCRAMBLE SET PASSCODES");
+  passwordsElem.setCustomValidity(isValid ? "" : "Please only paste the passwords not the descriptive text at the top of the file");
+  return isValid;
+}
+
+passwordsElem.onkeyup = checkPasswordsValidity;
+
 sortButtonElem.onclick = async () => {
-  sortButtonElem.classList.add("loading")
-  await sortPasswords();
-  sortButtonElem.classList.remove("loading")
+  const isPasswordsValid = checkPasswordsValidity();
+  if (!formElem.checkValidity() || !isPasswordsValid) {
+    alert("Please enter a valid competition ID and passwords");
+    return;
+  }
+
+  sortButtonElem.classList.add("loading", "btn-disabled");
+  sortButtonElem.disabled = true;
+  const sortedSuccessfully = await sortPasswords();
+  sortButtonElem.classList.remove("loading", "btn-disabled");
+  sortButtonElem.disabled = false;
+  
+  if (!sortedSuccessfully) return;
+  copyButtonElem.classList.remove("hidden");
 };
+
+copyButtonElem.onclick = () => {
+  navigator.clipboard.writeText(passwordsElem.value)
+}
+
+
+(async () => {
+  const res = await fetch(`https://api.github.com/repos/simonkellly/scramble-organizer`);
+  const resJson = await res.json();
+  starCountElem.innerText = resJson.stargazers_count;
+})();
