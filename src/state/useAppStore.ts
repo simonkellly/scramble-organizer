@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { sortPasswords } from "../logic/organizer";
+import { searchForCompId, sortPasswords } from "../logic/organizer";
 
 interface AppState {
   sorted: boolean;
@@ -26,7 +26,11 @@ export const useAppStore = create<AppState>()((set, get) => ({
     }
     if (!passwordData) return;
 
-    let idData: string = get().competitionId || passwordData.includes('SECRET SCRAMBLE SET PASSCODES') && passwordData.split("\n")[1].replace(/\s/g, '') || "";
+    const compName = passwordData.split("\n")[1].trim();
+    const idData: string = get().competitionId 
+      || passwordData.includes('SECRET SCRAMBLE SET PASSCODES') && (await searchForCompId(compName)|| passwordData.split("\n")[1].replace(/\s/g, ''))
+      || "";
+    
     if (!idData) return;
 
     const sort = await sortPasswords(idData, passwordData);

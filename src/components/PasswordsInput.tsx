@@ -16,15 +16,16 @@ export default function PasswordsInput() {
 
   const [loading, setLoading] = useState(false);
   const processPasswords = useAppStore((state) => state.processPasswords);
-  const clickSort = async () => {
+  const clickSort = () => {
     setLoading(true);
-    await processPasswords();
-    setLoading(false);
+    processPasswords()
+      .catch((error) => console.error(error))
+      .finally(() => setLoading(false));
   };
 
   const sorted = useAppStore((state) => state.sorted);
   const clickCopy = () => {
-    navigator.clipboard.writeText(passwords);
+    navigator.clipboard.writeText(passwords).catch((error) => console.error(error));
   };
 
   return (

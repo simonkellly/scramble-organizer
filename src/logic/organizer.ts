@@ -127,6 +127,22 @@ function checkWCIF(wcif: Competition | undefined): boolean {
   return true;
 }
 
+export async function searchForCompId(query: string): Promise<string | undefined> {
+  const apiUrl = `https://cors-proxy.simonkellly.workers.dev?https://worldcubeassociation.org/api/v0/search/competitions/?q=${query}`;
+  const response = await fetch(apiUrl, {});
+
+  if (!response.ok) {
+    console.log(response);
+    return undefined;
+  }
+
+  const json: unknown = await response.json();
+  console.log(json);
+  const data = json as { result: { id: string }[] };
+  if (data.result.length === 0) return undefined;
+  return data.result[0].id;
+}
+
 export async function sortPasswords(
   competitionId: string,
   passwords: string
@@ -144,7 +160,7 @@ export async function sortPasswords(
     ?.flatMap((venue) => venue.rooms)
     .flatMap((room) => room.activities);
 
-  const sorted = activities!
+  const sorted = activities
     .sort((a, b) => Date.parse(a.startTime) - Date.parse(b.startTime))
     .map((activity) => {
       return parseEventId(activity.activityCode);
@@ -162,10 +178,10 @@ export async function sortPasswords(
   const sortedPasswords = parsedPasswords
     .sort((a: Password, b: Password) => {
       const firstIdx = sorted.findIndex(
-        (event) => event!.event === a.event && event.roundId === a.round
+        (event) => event.event === a.event && event.roundId === a.round
       );
       const secondIdx = sorted.findIndex(
-        (event) => event!.event === b.event && event.roundId === b.round
+        (event) => event.event === b.event && event.roundId === b.round
       );
 
       return firstIdx - secondIdx;

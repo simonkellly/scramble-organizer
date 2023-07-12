@@ -17,9 +17,9 @@ export default function GithubAlert() {
       const res = await fetch(
         `https://api.github.com/repos/simonkellly/scramble-organizer`
       );
-      const resJson = await res.json();
+      const resJson = await res.json() as { stargazers_count: string };
       setStarCount(resJson.stargazers_count);
-    })();
+    })().catch((err) => console.error(err));
   }, []);
 
   return (

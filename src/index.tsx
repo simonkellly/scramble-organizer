@@ -25,7 +25,7 @@ export default function App() {
       reader.readAsText(file)
     })
     
-  }, [])
+  }, [processPasswords])
   const {getRootProps, isDragActive} = useDropzone({onDrop, noClick: true});
 
 
