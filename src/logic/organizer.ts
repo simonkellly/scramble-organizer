@@ -132,15 +132,11 @@ export async function searchForCompId(query: string): Promise<string | undefined
   const response = await fetch(apiUrl, {});
 
   if (!response.ok) {
-    console.log(response);
     return undefined;
   }
 
-  const json: unknown = await response.json();
-  console.log(json);
-  const data = json as { result: { id: string }[] };
-  if (data.result.length === 0) return undefined;
-  return data.result[0].id;
+  const json = await response.json() as { result: { id: string }[] };
+  return json?.result[0]?.id;
 }
 
 export async function sortPasswords(

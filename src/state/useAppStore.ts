@@ -28,7 +28,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
 
     const compName = passwordData.split("\n")[1].trim();
     const idData: string = get().competitionId 
-      || passwordData.includes('SECRET SCRAMBLE SET PASSCODES') && (await searchForCompId(compName)|| passwordData.split("\n")[1].replace(/\s/g, ''))
+      || passwordData.includes('SECRET SCRAMBLE SET PASSCODES') && (await searchForCompId(compName)|| compName.replace(/\s/g, ''))
       || "";
     
     if (!idData) return;
