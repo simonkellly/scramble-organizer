@@ -1,12 +1,8 @@
 import { Competition } from "@wca/helpers";
-import "./index.css";
 
-const starCountElem = document.querySelector<HTMLSpanElement>("#star-count")!;
-const formElem = document.querySelector<HTMLFormElement>("#form")!;
-const compIdElem = document.querySelector<HTMLInputElement>("#comp-id")!;
-const passwordsElem = document.querySelector<HTMLInputElement>("#passwords")!;
-const sortButtonElem = document.querySelector<HTMLButtonElement>("#sort")!;
-const copyButtonElem = document.querySelector<HTMLButtonElement>("#copy")!;
+export type Result<T, E = Error> =
+  | { ok: true; value: T }
+  | { ok: false; error: E };
 
 interface Dictionary<T> {
   [Key: string]: T;
@@ -57,6 +53,12 @@ interface Event {
   roundId: number;
 }
 
+interface Password {
+  password: string;
+  event: string;
+  round: number;
+}
+
 function parseEventId(id: string): Event | null {
   if (!id) return null;
   if (id.length < 3) return null;
@@ -67,12 +69,6 @@ function parseEventId(id: string): Event | null {
   if (roundId == null || isNaN(roundId)) return null;
 
   return { event, roundId };
-}
-
-interface Password {
-  password: string;
-  event: string;
-  round: number;
 }
 
 function parsePassword(password: string): Password | undefined {
@@ -102,22 +98,28 @@ function parsePassword(password: string): Password | undefined {
   };
 }
 
-async function getWCIF(competitionId: string): Promise<Competition | undefined> {
-  const apiUrl = `https://cors-proxy.simonkellly.workers.dev?https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`;
-  const response = await fetch(apiUrl, {
-  });
-  
-  if (!response.ok) {
-    console.log(response);
+async function getWCIF(
+  competitionId: string
+): Promise<Competition | undefined> {
+  try {
+    const apiUrl = `https://cors-proxy.simonkellly.workers.dev?https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`;
+    const response = await fetch(apiUrl, {});
+
+    if (!response.ok) {
+      console.log(response);
+      return undefined;
+    }
+
+    const wcif = (await response.json()) as Competition | undefined;
+    if (!checkWCIF(wcif)) return undefined;
+    return wcif;
+  } catch (error) {
+    console.error(error);
     return undefined;
   }
-
-  const wcif = await response.json() as Competition | undefined;
-  if (!checkWCIF(wcif)) return undefined;
-  return wcif;
 }
 
-function checkWCIF(wcif: Competition | undefined) : boolean {
+function checkWCIF(wcif: Competition | undefined): boolean {
   if (!wcif) return false;
 
   if (!wcif.schedule || !wcif.events) return false;
@@ -125,16 +127,18 @@ function checkWCIF(wcif: Competition | undefined) : boolean {
   return true;
 }
 
-async function sortPasswords() {
-  const competitionId = compIdElem.value.replace(/\s/g, "");
+export async function sortPasswords(
+  competitionId: string,
+  passwords: string
+): Promise<Result<string>> {
   const wcif = await getWCIF(competitionId);
 
   if (!wcif) {
-    alert("Error fetching competition details");
-    return false;
+    return {
+      ok: false,
+      error: new Error("Error fetching competition details"),
+    };
   }
-
-  const passwords = passwordsElem.value;
 
   const activities = wcif.schedule.venues
     ?.flatMap((venue) => venue.rooms)
@@ -153,7 +157,7 @@ async function sortPasswords() {
     .map((password) => {
       return parsePassword(password);
     })
-    .filter((password): password is Password => !!password)
+    .filter((password): password is Password => !!password);
 
   const sortedPasswords = parsedPasswords
     .sort((a: Password, b: Password) => {
@@ -168,43 +172,8 @@ async function sortPasswords() {
     })
     .map((password) => password.password);
 
-  passwordsElem.value = sortedPasswords.join("\r\n");
-  return true;
+  return {
+    ok: true,
+    value: sortedPasswords.join("\n"),
+  };
 }
-
-function checkPasswordsValidity() {
-  // Make sure the text SECRET SCRAMBLE SET PASSCODES does not appear in the passwords
-  const isValid = !passwordsElem.value.includes("SECRET SCRAMBLE SET PASSCODES");
-  passwordsElem.setCustomValidity(isValid ? "" : "Please only paste the passwords not the descriptive text at the top of the file");
-  return isValid;
-}
-
-passwordsElem.onkeyup = checkPasswordsValidity;
-
-sortButtonElem.onclick = async () => {
-  const isPasswordsValid = checkPasswordsValidity();
-  if (!formElem.checkValidity() || !isPasswordsValid) {
-    alert("Please enter a valid competition ID and passwords");
-    return;
-  }
-
-  sortButtonElem.classList.add("loading", "btn-disabled");
-  sortButtonElem.disabled = true;
-  const sortedSuccessfully = await sortPasswords();
-  sortButtonElem.classList.remove("loading", "btn-disabled");
-  sortButtonElem.disabled = false;
-  
-  if (!sortedSuccessfully) return;
-  copyButtonElem.classList.remove("hidden");
-};
-
-copyButtonElem.onclick = () => {
-  navigator.clipboard.writeText(passwordsElem.value)
-}
-
-
-(async () => {
-  const res = await fetch(`https://api.github.com/repos/simonkellly/scramble-organizer`);
-  const resJson = await res.json();
-  starCountElem.innerText = resJson.stargazers_count;
-})();
