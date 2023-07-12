@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { useAppStore } from "../useAppStore";
+import { useAppStore } from "../state/useAppStore";
 
 export default function PasswordsInput() {
   const competitionId = useAppStore((state) => state.competitionId);

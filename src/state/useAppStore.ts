@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { sortPasswords } from "./organizer";
+import { sortPasswords } from "../logic/organizer";
 
 interface AppState {
   sorted: boolean;

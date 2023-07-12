@@ -5,7 +5,7 @@ import Description from "./components/Description";
 import PasswordsInput from "./components/PasswordsInput";
 import DragModal from "./components/DragModal";
 import { useDropzone } from "react-dropzone";
-import { useAppStore } from "./useAppStore";
+import { useAppStore } from "./state/useAppStore";
 
 export default function App() {
   const processPasswords = useAppStore(state => state.processPasswords);
