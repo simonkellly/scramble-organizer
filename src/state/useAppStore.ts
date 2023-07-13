@@ -7,7 +7,7 @@ interface AppState {
   passwords: string;
   setCompetitionId: (competitionId: string) => void;
   setPasswords: (passwords: string) => void;
-  processPasswords: (passwords?: string) => Promise<void>;
+  processPasswords: (wasDropped: boolean, passwords?: string) => Promise<void>;
 }
 
 export const useAppStore = create<AppState>()((set, get) => ({
@@ -16,7 +16,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
   passwords: "",
   setCompetitionId: (competitionId) => set(() => ({ competitionId, sorted: false })),
   setPasswords: (passwords) => set(() => ({ passwords, sorted: false })),
-  processPasswords: async (passwords: string | undefined) => {
+  processPasswords: async (wasDropped: boolean, passwords?: string) => {
     let passwordData: string | undefined = undefined;
     if (passwords) {
       passwordData = passwords;
@@ -33,7 +33,7 @@ export const useAppStore = create<AppState>()((set, get) => ({
     
     if (!idData) return;
 
-    const sort = await sortPasswords(idData, passwordData);
+    const sort = await sortPasswords(wasDropped, idData, passwordData);
     if (!sort.ok) {
       console.log(sort.error);
       return;

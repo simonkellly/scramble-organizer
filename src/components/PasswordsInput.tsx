@@ -18,7 +18,7 @@ export default function PasswordsInput() {
   const processPasswords = useAppStore((state) => state.processPasswords);
   const clickSort = () => {
     setLoading(true);
-    processPasswords()
+    processPasswords(false)
       .catch((error) => console.error(error))
       .finally(() => setLoading(false));
   };

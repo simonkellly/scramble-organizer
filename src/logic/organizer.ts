@@ -99,10 +99,11 @@ function parsePassword(password: string): Password | undefined {
 }
 
 async function getWCIF(
+  wasDropped: boolean,
   competitionId: string
 ): Promise<Competition | undefined> {
   try {
-    const apiUrl = `https://cors-proxy.simonkellly.workers.dev?https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`;
+    const apiUrl = `https://cors-proxy.simonkellly.workers.dev?https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public${wasDropped ? "?dropped" : ""}`;
     const response = await fetch(apiUrl, {});
 
     if (!response.ok) {
@@ -140,10 +141,11 @@ export async function searchForCompId(query: string): Promise<string | undefined
 }
 
 export async function sortPasswords(
+  wasDropped: boolean,
   competitionId: string,
   passwords: string
 ): Promise<Result<string>> {
-  const wcif = await getWCIF(competitionId);
+  const wcif = await getWCIF(wasDropped, competitionId);
 
   if (!wcif) {
     return {

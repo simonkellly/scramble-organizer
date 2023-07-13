@@ -19,7 +19,7 @@ export default function App() {
       reader.onabort = () => console.log('file reading was aborted')
       reader.onerror = () => console.log('file reading has failed')
       reader.onload = async () => {
-        await processPasswords(reader.result as string);
+        await processPasswords(true, reader.result as string);
         setLoadingDrop(false);
       }
       reader.readAsText(file)
