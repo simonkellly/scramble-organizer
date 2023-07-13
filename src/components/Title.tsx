@@ -5,7 +5,7 @@ export default function Title() {
       <p className="text-2xl font-semibold">
         A simple tool to sort WCA scramble passwords.
       </p>
-      <p className="text-l font-semibold">
+      <p className="text-l text-primary font-semibold">
         Try dropping your passwords file onto the page!
       </p>
     </div>
