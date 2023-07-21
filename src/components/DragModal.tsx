@@ -1,6 +1,9 @@
+import { useSavedStore } from "../state/useSavedStore";
 
 export default function DragModal({ isDragging }: { isDragging: boolean }) {
-  if (!isDragging) return <></>;
+  const [shownDrag, setShownDrag] = useSavedStore((state) => [state.shownDrag, state.setShownDrag]);
+
+  if (!isDragging && shownDrag) return <></>;
 
   return (
     <div className="modal modal-open">
@@ -16,6 +19,7 @@ export default function DragModal({ isDragging }: { isDragging: boolean }) {
             <br />
           </label>
         </div>
+        {shownDrag && (<button className="btn btn-primary mt-4" onClick={() => setShownDrag()}>Close</button>)}
       </div>
     </div>
   );
