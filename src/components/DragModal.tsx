@@ -19,7 +19,7 @@ export default function DragModal({ isDragging }: { isDragging: boolean }) {
             <br />
           </label>
         </div>
-        {shownDrag && (<button className="btn btn-primary mt-4" onClick={() => setShownDrag()}>Close</button>)}
+        {!isDragging && (<button className="btn btn-primary mt-4" onClick={() => setShownDrag()}>Close</button>)}
       </div>
     </div>
   );
