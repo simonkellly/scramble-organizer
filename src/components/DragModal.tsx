@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import { useSavedStore } from "../state/useSavedStore";
 
 export default function DragModal({ isDragging }: { isDragging: boolean }) {
   const [shownDrag, setShownDrag] = useSavedStore((state) => [state.shownDrag, state.setShownDrag]);
+
+  useEffect(() => {
+    if (isDragging && !shownDrag) setShownDrag();
+  }, [isDragging, shownDrag, setShownDrag]);
 
   if (!isDragging && shownDrag) return <></>;
 
