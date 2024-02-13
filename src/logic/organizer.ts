@@ -102,6 +102,7 @@ async function getWCIF(
   wasDropped: boolean,
   competitionId: string
 ): Promise<Competition | undefined> {
+  console.log(wasDropped, competitionId)
   try {
     const apiUrl = 'https://corsproxy.io/?' + encodeURIComponent(`https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`);
     const response = await fetch(apiUrl, {});
