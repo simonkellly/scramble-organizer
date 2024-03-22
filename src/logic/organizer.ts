@@ -104,7 +104,8 @@ async function getWCIF(
 ): Promise<Competition | undefined> {
   console.log(wasDropped, competitionId)
   try {
-    const apiUrl = 'https://corsproxy.io/?' + encodeURIComponent(`https://worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`);
+    const apiUrl = `https://www.worldcubeassociation.org/api/v0/competitions/${competitionId}/wcif/public`;
+    
     const response = await fetch(apiUrl, {});
 
     if (!response.ok) {
@@ -130,7 +131,7 @@ function checkWCIF(wcif: Competition | undefined): boolean {
 }
 
 export async function searchForCompId(query: string): Promise<string | undefined> {
-  const apiUrl = 'https://corsproxy.io/?' + encodeURIComponent(`https://worldcubeassociation.org/api/v0/search/competitions/?q=${query}`);
+  const apiUrl = `https://www.worldcubeassociation.org/api/v0/search/competitions/?q=${query}`;
   const response = await fetch(apiUrl, {});
 
   if (!response.ok) {
