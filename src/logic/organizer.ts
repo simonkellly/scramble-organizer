@@ -140,7 +140,7 @@ export async function searchForCompId(query: string): Promise<string | undefined
 
   const json = await response.json() as { result: { id: string, name: string }[] };
   const match = json.result.find(c => c.id == query || c.name == query);
-  return match.id ?? json?.result[0]?.id;
+  return match?.id ?? json?.result[0]?.id;
 }
 
 export async function sortPasswords(
