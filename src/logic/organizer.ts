@@ -138,8 +138,9 @@ export async function searchForCompId(query: string): Promise<string | undefined
     return undefined;
   }
 
-  const json = await response.json() as { result: { id: string }[] };
-  return json?.result[0]?.id;
+  const json = await response.json() as { result: { id: string, name: string }[] };
+  const match = json.result.find(c => c.id == query || c.name == query);
+  return match ?? json?.result[0]?.id;
 }
 
 export async function sortPasswords(
